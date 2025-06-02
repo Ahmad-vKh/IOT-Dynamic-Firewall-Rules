@@ -1,0 +1,128 @@
+#!/bin/bash
+
+# Define profile name from the first argument
+PROFILE=$1
+
+# Common flush to clear existing rules
+nft flush ruleset
+
+# Define basic tables and chains
+nft add table inet firewall
+nft add chain inet firewall input { type filter hook input priority 0 \; policy drop \; }
+nft add chain inet firewall forward { type filter hook forward priority 0 \; policy drop \; }
+nft add chain inet firewall output { type filter hook output priority 0 \; policy drop \; }
+
+# Define whitelist IPs and service ports
+WHITELIST_IPS="192.168.30.110"
+CONTROL_PORT=9999
+SSH_PORT=22
+
+# Log file path (CSV in same directory as script)
+LOG_FILE="$(dirname "$0")/firewall_profiles.csv"
+
+# Create CSV header if file doesn't exist
+if [ ! -f "$LOG_FILE" ]; then
+    echo "date,time,profile" > "$LOG_FILE"
+fi
+
+apply_idle_profile() {
+    echo "[*] Applying Idle Profile..."
+    echo "$(date '+%Y-%m-%d'),$(date '+%H:%M:%S'),idle" >> "$LOG_FILE"
+
+    # Allow loopback
+    nft add rule inet firewall input iif lo accept
+    nft add rule inet firewall output oif lo accept
+
+    # Allow only predefined control traffic
+    nft add rule inet firewall input ip saddr $WHITELIST_IPS tcp dport $CONTROL_PORT accept
+    nft add rule inet firewall output ip daddr $WHITELIST_IPS tcp sport $CONTROL_PORT accept
+
+    # Drop ICMP to prevent reconnaissance
+    nft add rule inet firewall input ip protocol icmp drop
+
+    # Dynamically block unused ports (example: deny everything not 54321)
+    nft add rule inet firewall input tcp dport != $CONTROL_PORT drop
+}
+
+apply_low_activity_profile() {
+    echo "[*] Applying Low Activity Profile..."
+    echo "$(date '+%Y-%m-%d'),$(date '+%H:%M:%S'),low" >> "$LOG_FILE"
+
+    # Stateless filtering - allow loopback and whitelist
+    nft add rule inet firewall input iif lo accept
+    nft add rule inet firewall output oif lo accept
+
+    nft add rule inet firewall input ip saddr $WHITELIST_IPS accept
+    nft add rule inet firewall output ip daddr $WHITELIST_IPS accept
+
+    # Allow only essential communication
+    nft add rule inet firewall input tcp dport $CONTROL_PORT accept
+    nft add rule inet firewall output tcp sport $CONTROL_PORT accept
+
+    # Drop all others
+    nft add rule inet firewall input drop
+    nft add rule inet firewall output drop
+}
+
+apply_high_activity_profile() {
+    echo "[*] Applying High Activity Profile..."
+    echo "$(date '+%Y-%m-%d'),$(date '+%H:%M:%S'),high" >> "$LOG_FILE"
+
+    # Enable connection tracking (stateful filtering)
+    nft add rule inet firewall input ct state established,related accept
+    nft add rule inet firewall output ct state established,related accept
+
+    nft add rule inet firewall input iif lo accept
+    nft add rule inet firewall output oif lo accept
+
+    # Allow control and SSH from trusted IPs
+    nft add rule inet firewall input ip saddr $WHITELIST_IPS tcp dport { $CONTROL_PORT, $SSH_PORT } accept
+    nft add rule inet firewall output ip daddr $WHITELIST_IPS tcp sport { $CONTROL_PORT, $SSH_PORT } accept
+        nft add rule inet firewall output ip daddr $WHITELIST_IPS tcp dport { $CONTROL_PORT, $SSH_PORT, 9999 } accept
+
+    # Add rate limiting to SSH
+    nft add rule inet firewall input tcp dport $SSH_PORT limit rate 10/minute accept
+    nft add rule inet firewall input tcp dport $SSH_PORT drop
+
+    # Drop everything else
+    nft add rule inet firewall input drop
+    nft add rule inet firewall output drop
+}
+
+apply_critical_profile() {
+    echo "[*] Applying Critical Task Profile..."
+    echo "$(date '+%Y-%m-%d'),$(date '+%H:%M:%S'),critical" >> "$LOG_FILE"
+
+    # Apply all high-activity rules
+    apply_high_activity_profile
+
+    # Block all traffic except from whitelisted IPs
+    nft add rule inet firewall input ip saddr != $WHITELIST_IPS drop
+    nft add rule inet firewall output ip daddr != $WHITELIST_IPS drop
+
+    # Integrate with Suricata (assuming it's running in IPS mode)
+    echo "[*] Ensuring Suricata is monitoring traffic..."
+    systemctl restart suricata
+}
+
+# Dispatcher
+case "$PROFILE" in
+    idle)
+        apply_idle_profile
+        ;;
+    low)
+        apply_low_activity_profile
+        ;;
+    high)
+        apply_high_activity_profile
+        ;;
+    critical)
+        apply_critical_profile
+        ;;
+    *)
+        echo "Usage: $0 {idle|low|high|critical}"
+        exit 1
+        ;;
+esac
+
+echo "[*] Firewall profile '$PROFILE' applied successfully."
