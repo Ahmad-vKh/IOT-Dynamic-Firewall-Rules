@@ -1,0 +1,201 @@
+#!/bin/bash
+
+# central_security.sh: Static security rules for central node with anomaly detection
+# Purpose: Configure nftables and Suricata for a Python socket server (port 9999)
+# Focus: Anomaly detection, no IP whitelisting, no rate limiting on port 9999, one-time setup, runs forever
+# Usage: sudo ./central_security.sh
+
+# --- Configuration Variables ---
+SOCKET_PORT=9999       # Port for Python socket server (no rate limiting)
+SSH_PORT=2222          # Non-standard SSH port for admin access
+NETWORK_IFACE="eth0"   # Network interface (adjust as needed, e.g., ens33)
+LOG_FILE="/var/log/central_security.log"
+
+# --- Helper Functions ---
+
+# Log messages to file and console
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+# Check if command succeeded
+check_error() {
+    if [ $? -ne 0 ]; then
+        log_message "Error: $1"
+        exit 1
+    fi
+}
+
+# --- Initial Checks ---
+
+# Ensure script runs as root
+if [ "$EUID" -ne 0 ]; then
+    log_message "This script must be run as root (use sudo)"
+    exit 1
+fi
+
+# Check for required tools
+for cmd in nft suricata systemctl; do
+    if ! command -v "$cmd" &> /dev/null; then
+        log_message "Error: $cmd is not installed"
+        exit 1
+    fi
+done
+
+# Create log file if it doesn't exist
+touch "$LOG_FILE" 2>/dev/null || {
+    log_message "Error: Cannot create log file $LOG_FILE"
+    exit 1
+}
+chmod 644 "$LOG_FILE"
+
+log_message "Starting central node security configuration..."
+
+# --- 1. Configure nftables Firewall ---
+
+log_message "Configuring nftables firewall..."
+
+# Flush existing rules
+nft flush ruleset
+check_error "Failed to flush nftables rules"
+
+# Create table and chains
+nft add table inet firewall
+nft add chain inet firewall input { type filter hook input priority 0 \; policy drop \; }
+nft add chain inet firewall forward { type filter hook forward priority 0 \; policy drop \; }
+nft add chain inet firewall output { type filter hook output priority 0 \; policy drop \; }
+check_error "Failed to create nftables table/chains"
+
+# Allow loopback traffic
+nft add rule inet firewall input iif lo accept
+nft add rule inet firewall output oif lo accept
+
+# Allow established/related connections
+nft add rule inet firewall input ct state established,related accept
+nft add rule inet firewall output ct state established,related accept
+
+# Allow incoming socket connections (port 9999, no rate limiting)
+nft add rule inet firewall input tcp dport $SOCKET_PORT accept
+check_error "Failed to add socket port rule"
+
+# Allow incoming SSH (port 2222) with rate limiting
+nft add rule inet firewall input tcp dport $SSH_PORT limit rate 5/minute accept
+check_error "Failed to add SSH port rule"
+
+# Allow outgoing DNS (port 53) and updates (ports 80, 443)
+nft add rule inet firewall output udp dport 53 accept
+nft add rule inet firewall output tcp dport { 80, 443 } accept
+
+# Log dropped packets for anomaly analysis
+nft add rule inet firewall input log prefix \"[nft-drop] \" drop
+check_error "Failed to add logging rule"
+
+# Save nftables rules to persist across reboots
+nft list ruleset > /etc/nftables.conf
+check_error "Failed to save nftables rules to /etc/nftables.conf"
+
+# Enable and start nftables service
+systemctl enable nftables >/dev/null 2>&1
+systemctl start nftables >/dev/null 2>&1
+check_error "Failed to enable/start nftables service"
+
+log_message "nftables firewall configured successfully"
+
+# --- 2. Configure Suricata for Anomaly Detection ---
+
+log_message "Configuring Suricata for anomaly detection..."
+
+# Update Suricata rules (Emerging Threats)
+suricata-update >/dev/null 2>&1
+check_error "Failed to update Suricata rules"
+
+# Configure Suricata (edit suricata.yaml)
+SURICATA_CONF="/etc/suricata/suricata.yaml"
+if [ ! -f "$SURICATA_CONF" ]; then
+    log_message "Error: Suricata configuration file $SURICATA_CONF not found"
+    exit 1
+fi
+
+# Backup original config
+cp "$SURICATA_CONF" "${SURICATA_CONF}.backup" 2>/dev/null
+check_error "Failed to backup Suricata configuration"
+
+# Update suricata.yaml with basic settings (IDS mode, monitor eth0)
+cat << EOF > "$SURICATA_CONF"
+%YAML 1.1
+---
+default-rule-path: /var/lib/suricata/rules
+rule-files:
+  - suricata.rules
+home-net: [0.0.0.0/0]
+external-net: [!0.0.0.0/0]
+default-log-dir: /var/log/suricata/
+vars:
+  address-groups:
+    HOME_NET: "[0.0.0.0/0]"
+    EXTERNAL_NET: "!$HOME_NET"
+  port-groups:
+    HTTP_PORTS: "80,443"
+    SHELLCODE_PORTS: "!0"
+af-packet:
+  - interface: $NETWORK_IFACE
+    threads: 1
+    defrag: yes
+    cluster-type: cluster_flow
+    cluster-id: 99
+    checksum-checks: auto
+    bypass: no
+logging:
+  default-log-level: info
+  outputs:
+    - fast:
+        enabled: yes
+        filename: fast.log
+        append: yes
+    - eve-log:
+        enabled: yes
+        filetype: regular
+        filename: eve.json
+        types:
+          - alert
+          - anomaly
+          - http
+          - dns
+          - tls
+          - ssh
+EOF
+check_error "Failed to configure Suricata"
+
+# Ensure log directory exists
+mkdir -p /var/log/suricata 2>/dev/null
+chmod 755 /var/log/suricata
+
+# Enable and start Suricata
+systemctl enable suricata >/dev/null 2>&1
+systemctl start suricata >/dev/null 2>&1
+check_error "Failed to enable/start Suricata"
+
+# Verify Suricata is running
+if ! systemctl is-active --quiet suricata; then
+    log_message "Error: Suricata failed to start"
+    exit 1
+fi
+
+log_message "Suricata configured successfully for anomaly detection"
+
+# --- 3. Schedule Rule Updates ---
+
+# Add cron job for daily Suricata rule updates
+CRON_JOB="0 0 * * * /usr/bin/suricata-update"
+if ! crontab -l 2>/dev/null | grep -q "suricata-update"; then
+    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+    check_error "Failed to add Suricata update cron job"
+fi
+
+log_message "Suricata rule updates scheduled daily"
+
+# --- Completion ---
+
+log_message "Central node security configuration completed successfully"
+echo "Central node security configured. Logs at $LOG_FILE"
+echo "Suricata alerts at /var/log/suricata/eve.json"

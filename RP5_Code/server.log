@@ -1,0 +1,123 @@
+2025-04-08 15:52:05,882 - INFO - Server started on 0.0.0.0:9999
+2025-04-08 15:52:07,188 - INFO - Shutdown signal received
+2025-04-08 16:27:08,415 - INFO - Server started on 0.0.0.0:9999
+2025-04-08 16:27:30,075 - INFO - Updated 192.168.1.17 to Low Activity
+2025-04-08 16:27:42,245 - INFO - Updated 192.168.1.17 to High Activity
+2025-04-08 16:27:49,966 - INFO - Shutdown signal received
+2025-04-08 16:40:16,332 - INFO - Server started on 0.0.0.0:9999
+2025-04-08 16:44:05,422 - INFO - Updated 192.168.1.17 to High Activity
+2025-04-08 16:44:12,782 - INFO - Updated 192.168.1.18 to High Activity
+2025-04-08 16:44:16,803 - INFO - Updated 192.168.1.17 to Moderate Activity
+2025-04-08 16:44:25,784 - INFO - Updated 192.168.1.18 to High Activity
+2025-04-08 16:44:28,652 - INFO - Updated 192.168.1.17 to Moderate Activity
+2025-04-08 16:44:37,323 - INFO - Updated 192.168.1.18 to Low Activity
+2025-04-08 16:44:41,159 - INFO - Updated 192.168.1.17 to High Activity
+2025-04-08 16:44:43,291 - INFO - Shutdown signal received
+2025-04-08 17:05:46,732 - INFO - Server started on 0.0.0.0:9999
+2025-04-08 17:06:31,584 - INFO - Updated 192.168.1.20 to Moderate Activity
+2025-04-28 17:41:41,259 - INFO - Server started on 0.0.0.0:9999
+2025-04-28 17:52:30,872 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 17:53:34,155 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 17:53:45,834 - INFO - Updated 192.168.30.111 to Critical Task
+2025-04-28 17:54:48,439 - INFO - Updated 192.168.30.111 to High Activity
+2025-04-28 18:07:28,864 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 18:07:52,683 - INFO - Updated 192.168.30.111 to Low Activity
+2025-04-28 18:08:26,065 - INFO - Updated 192.168.30.125 to Low Activity
+2025-04-28 18:08:31,078 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 18:08:55,346 - INFO - Updated 192.168.30.111 to High Activity
+2025-04-28 18:09:32,421 - INFO - Updated 192.168.30.125 to High Activity
+2025-04-28 18:16:36,647 - INFO - Shutdown signal received
+2025-04-28 18:16:40,350 - INFO - Server started on 0.0.0.0:9999
+2025-04-28 18:23:24,836 - INFO - Updated 192.168.30.109 to Moderate Activity
+2025-04-28 18:23:37,202 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 18:27:18,822 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 18:27:30,597 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 18:27:42,168 - INFO - Updated 192.168.30.109 to Moderate Activity
+2025-04-28 18:27:54,456 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 18:28:06,746 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 18:37:44,903 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 18:37:56,986 - INFO - Updated 192.168.30.109 to Moderate Activity
+2025-04-28 18:38:09,170 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 18:38:20,822 - INFO - Updated 192.168.30.109 to Moderate Activity
+2025-04-28 18:47:16,434 - INFO - Shutdown signal received
+2025-04-28 20:17:15,415 - INFO - Server started on 0.0.0.0:9999
+2025-04-28 20:19:14,852 - INFO - Shutdown signal received
+2025-04-28 20:21:28,507 - INFO - Server started on 0.0.0.0:9999
+2025-04-28 20:22:41,640 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:22:53,003 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:23:05,187 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:23:18,398 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 20:23:33,347 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 20:23:45,254 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 20:23:58,334 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:24:10,313 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:24:22,599 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:24:35,099 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 20:24:50,057 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:25:02,377 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:25:14,726 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:25:27,347 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:25:39,115 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:25:51,386 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:26:03,405 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:26:14,859 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:26:26,406 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:26:38,183 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:27:50,685 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 20:28:05,225 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 20:40:59,475 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 20:57:18,937 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:12:26,206 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 21:19:05,774 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 21:39:42,060 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 21:47:13,070 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 21:47:23,581 - INFO - Updated 192.168.30.109 to Idle
+2025-04-28 21:54:25,877 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:56:38,798 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:56:49,449 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 21:57:15,010 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:57:25,780 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:57:36,098 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:57:50,067 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:58:00,719 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 21:58:11,675 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 21:58:39,525 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:01:54,294 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:02:04,843 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:02:15,287 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:02:27,574 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 22:02:41,248 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:02:51,932 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:03:02,253 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:03:12,630 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:03:23,171 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:03:35,764 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:03:46,094 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:03:48,866 - INFO - Shutdown signal received
+2025-04-28 22:12:17,518 - INFO - Server started on 0.0.0.0:9999
+2025-04-28 22:13:23,316 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:13:33,730 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:14:46,646 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:14:59,217 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 22:15:11,174 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:15:21,726 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:15:32,374 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:15:45,172 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:15:55,619 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:16:07,925 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:16:20,196 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:16:32,688 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 22:16:44,978 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:16:55,728 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:17:06,376 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:17:16,785 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:17:27,779 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:17:40,681 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:17:51,540 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:18:12,632 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:18:24,950 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:18:37,445 - INFO - Updated 192.168.30.109 to Critical Task
+2025-04-28 22:18:51,621 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:19:02,049 - INFO - Updated 192.168.30.109 to High Activity
+2025-04-28 22:19:12,842 - INFO - Updated 192.168.30.109 to Low Activity
+2025-04-28 22:39:34,987 - INFO - Shutdown signal received
